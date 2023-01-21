@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BERT Text Classification API</title>
+</head>
+<body>
+    <h1>BERT Text Classification API</h1>
+    <form method="post" action="http://localhost:8000/predict" enctype="application/json">
+        <textarea name="text" placeholder="Enter text to classify sentiment"></textarea>
+        <br>
+        <input type="submit" value="Classify">
+    </form>
+    <div id="result"></div>
+    <script>
+        // Get the form element
+        var form = document.querySelector('form');
+
+        // Listen for the form submit event
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Get the text to classify
+            var text = form.elements.text.value;
+
+            // Create a JSON payload with the text
+            var payload = {'text': text};
+
+            // Create an XMLHttpRequest
+            var xhr = new XMLHttpRequest();
+
+            // Open the request
+            xhr.open('POST', form.action, true);
+
+            // Set the Content-Type header
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            // Listen for the load event
+            xhr.addEventListener('load', function() {
+                if (xhr.status === 200) {
+                    // Parse the JSON response
+                    var response = JSON.parse(xhr.responseText);
+
+                    // Get the result div
+                    var result = document.getElementById('result');
+                    // Display the label
+                    result.innerHTML = "The predicted class is: " + response.label;
+                } else {
+                    // Handle the error
+                    alert('An error occurred');
+                }
+            });
+
+            // Send the request
+            xhr.send(JSON.stringify(payload));
+        });
+    </script>
+</body>
+</html>
